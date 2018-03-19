@@ -1,0 +1,31 @@
+# Copyright 2018, Juniper Networks Pvt Ltd.
+# All rights reserved.
+# command example: ansible-playbook -i all.inv 01-contrail-install.yml
+---
+- name: Prepare the images
+  hosts: contrail-ubuntu-vm
+  gather_facts: false
+  environment:
+    LIBGUESTFS_BACKEND: direct
+
+  tasks:
+
+    - name: Set necessary variables
+      set_fact:
+        os_auth:
+          auth_url: http://10.10.7.205:35357/v3
+          username: admin
+          password: contrail123
+          project_name: admin
+          os_tenant_name: admin
+          project_domain_name: default
+          user_domain_name: default
+
+    - name: Gather facts about previously created subnets
+      os_subnets_facts:
+        auth: "{{ os_auth }}"
+
+    - name: Show openstack subnets
+      debug:
+        var: openstack_subnets
+

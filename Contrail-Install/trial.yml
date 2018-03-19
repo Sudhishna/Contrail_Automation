@@ -1,0 +1,34 @@
+# Copyright 2018, Juniper Networks Pvt Ltd.
+# All rights reserved.
+# command example: ansible-playbook -i all.inv 01-contrail-server-manager.yml
+---
+- name: install contrail
+  hosts: base-vm
+  gather_facts: false
+  tasks:
+
+    - stat: path=/root/debug_file.txt
+      register: debug_file
+
+    - name: Empty Debug file
+      copy:
+        content: ""
+        dest: /root/debug_file.txt
+      when: debug_file.stat.exists
+
+    - name: Wait for the Server Manager Provisioning to complete
+      shell: cat /root/debug_file.txt
+      register: results
+      args:
+        executable: /bin/bash
+      until: results.stdout.find("openstack_post-deploy-contrail") != -1
+      retries: 50
+      delay: 20
+    - debug:
+        var: results.stdout
+
+    - name: Wait 900 seconds, but only start checking after 180 seconds
+      wait_for_connection:
+        delay: 240
+        sleep: 20
+        timeout: 900

@@ -1,0 +1,112 @@
+# Copyright 2018, Juniper Networks Pvt Ltd.
+# All rights reserved.
+# command example: ansible-playbook -i all.inv 06-create-servers.yml
+---
+- name: install contrail
+  hosts: contrail-ubuntu-vm
+  gather_facts: false
+  tasks:
+
+    - name: Set necessary variables
+      set_fact:
+        os_auth:
+          auth_url: http://10.10.7.205:35357/v3
+          username: admin
+          password: contrail123
+          project_name: admin
+          os_tenant_name: admin
+          project_domain_name: default
+          user_domain_name: default
+
+    - name: Gather facts about previously created networks
+      os_networks_facts:
+        auth: "{{ os_auth }}"
+
+    - name: Fetch Network ID
+      set_fact:
+        webserver_network_id: "{{ openstack_networks | json_query(jq_webserver) }}"
+        gui_network_id: "{{ openstack_networks | json_query(jq_gui) }}"
+        db_network_id: "{{ openstack_networks | json_query(jq_db) }}"
+      vars:
+        jq_webserver: "[?name=='webserver_network'].id"
+        jq_gui: "[?name=='gui_network'].id"
+        jq_db: "[?name=='db_network'].id"
+    - debug:
+        msg:
+          - "{{db_network_id}}"
+          - "{{gui_network_id}}"
+          - "{{webserver_network_id}}"
+
+    - name: Create DB SERVER
+      os_server:
+        auth: "{{ os_auth }}"
+        name: db
+        image: db_image
+        flavor: m1.tiny
+        nics:
+          - net-id: "{{ db_network_id[0] }}"
+        security_groups: default
+        timeout: 300
+        userdata: |
+          #cloud-config
+          chpasswd:
+            list: |
+              password: juniper123
+            expire: False
+
+    - name: Create WEBSERVER SECONDARY
+      os_server:
+        auth: "{{ os_auth }}"
+        name: webserver_secondary
+        image: webserver-secondary_image
+        flavor: m1.tiny
+        nics:
+          - net-id: "{{ webserver_network_id[0] }}"
+        security_groups: default
+        timeout: 300
+        userdata: |
+          #cloud-config
+          chpasswd:
+            list: |
+              password: juniper123
+            expire: False
+
+    - name: Create WEBSERVER PRIMARY
+      os_server:
+        auth: "{{ os_auth }}"
+        name: webserver_primary
+        image: webserver-primary_image
+        flavor: m1.tiny
+        nics:
+          - net-id: "{{ webserver_network_id[0] }}"
+        security_groups: default
+        timeout: 240
+        userdata: |
+          #cloud-config
+          chpasswd:
+            list: |
+              password: juniper123
+            expire: False
+
+    - name: Create GUI SERVER
+      os_server:
+        auth: "{{ os_auth }}"
+        name: gui
+        image: gui_image
+        flavor: m1.small
+        nics:
+          - net-id: "{{ gui_network_id[0] }}"
+        security_groups: default
+        timeout: 300
+
+    - name: Gather facts about the created servers
+      shell: openstack --os-auth-url "http://10.10.7.205:35357/v3" --os-username admin --os-project-name admin --os-tenant-name admin --os-password "contrail123" --os-default-domain-name default server list -f json
+      register: server_list
+
+    - name: Display Servers
+      set_fact:
+        servers: "{{ server_list.stdout | from_json }}"
+    - debug:
+        msg:
+          - "{{servers}}"
+
