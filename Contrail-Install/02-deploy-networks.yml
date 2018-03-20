@@ -5,63 +5,50 @@
 - name: install contrail
   hosts: contrail-ubuntu-vm
   gather_facts: false
+  vars:
+    openrc:
+      OS_PROJECT_DOMAIN_NAME: default
+      OS_USER_DOMAIN_NAME: default
+      OS_PROJECT_NAME: admin
+      OS_TENANT_NAME: admin
+      OS_USERNAME: admin
+      OS_PASSWORD: contrail123
+      OS_AUTH_URL: http://10.10.7.205:35357/v3
+      OS_INTERFACE: internal
+      OS_IDENTITY_API_VERSION: 3
+
+  environment: "{{ openrc }}"
   tasks:
-
-    - name: Set necessary variables
-      set_fact:
-        os_auth:
-          auth_url: http://10.10.7.205:35357/v3
-          username: admin
-          password: contrail123
-          project_name: admin
-          os_tenant_name: admin
-          project_domain_name: default
-          user_domain_name: default
-
-    - name: install shade 
+    - name: install shade
       pip:
         name: shade
 
-    - name: create webserver network
-      os_network:
-        auth: "{{ os_auth }}"
-        name: webserver_network
+    - name: create scripts directory
+      file: state=directory path=~/scripts
 
-    - name: create webserver subnet
-      os_subnet:
-        auth: "{{ os_auth }}"
-        network_name: webserver_network
-        name: webserver_subnet
-        cidr: 10.0.2.0/24
+    - name: copy the scripts required
+      copy:
+        src: /root/Contrail_Automation/Contrail-Install/deploy-networks.yml
+        dest: /root/scripts/
 
-    - name: create gui network
-      os_network:
-        auth: "{{ os_auth }}"
-        name: gui_network
+    - name: Add heat_stack_owner role
+      os_user_role:
+        user: admin
+        role: heat_stack_owner
+        project: admin
 
-    - name: create gui subnet
-      os_subnet:
-        auth: "{{ os_auth }}"
-        network_name: gui_network
-        name: gui_subnet
-        cidr: 10.0.3.0/24
+    - name: Install networks, subnet, and policy
+      os_stack:
+        name: deploy-networks
+        state: present
+        template: "/root/scripts/deploy-networks.yml"
 
-    - name: create db network
-      os_network:
-        auth: "{{ os_auth }}"
-        name: db_network
-
-    - name: create db subnet
-      os_subnet:
-        auth: "{{ os_auth }}"
-        network_name: db_network
-        name: db_subnet
-        cidr: 10.0.5.0/24
+    - name: sleep for 5 seconds and continue with play
+      wait_for: timeout=5
 
     - name: Gather facts about previously created networks
       shell: openstack --os-auth-url "http://10.10.7.205:35357/v3" --os-username admin --os-project-name admin --os-tenant-name admin --os-password "contrail123" --os-default-domain-name default network list -f json
       register: network_list
-
     - name: Display Networks
       set_fact:
         networks: "{{ network_list.stdout | from_json | json_query(jq)}}"
@@ -71,16 +58,14 @@
         msg:
           - "{{networks}}"
 
-
     - name: Gather facts about previously created subnets
       shell: openstack --os-auth-url "http://10.10.7.205:35357/v3" --os-username admin --os-project-name admin --os-tenant-name admin --os-password "contrail123" --os-default-domain-name default subnet list -f json
       register: network_list
-
-    - name: Display Networks
+    - name: Display Subnets
       set_fact:
         subnets: "{{ network_list.stdout | from_json | json_query(jq)}}"
       vars:
-        jq: "[?contains(Name,'_subnet')].{ID:ID,Name:Name,Network:Network,Subnet:Subnet}"
+        jq: "[?contains(Name,'')].{ID:ID,Network:Network,Subnet:Subnet}"
     - debug:
         msg:
           - "{{subnets}}"

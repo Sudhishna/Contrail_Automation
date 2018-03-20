@@ -46,7 +46,7 @@
         nics:
           - net-id: "{{ db_network_id[0] }}"
         security_groups: default
-        timeout: 300
+        timeout: 3600
         userdata: |
           #cloud-config
           chpasswd:
@@ -63,7 +63,7 @@
         nics:
           - net-id: "{{ webserver_network_id[0] }}"
         security_groups: default
-        timeout: 300
+        timeout: 3600
         userdata: |
           #cloud-config
           chpasswd:
@@ -80,7 +80,7 @@
         nics:
           - net-id: "{{ webserver_network_id[0] }}"
         security_groups: default
-        timeout: 240
+        timeout: 3600
         userdata: |
           #cloud-config
           chpasswd:
@@ -97,7 +97,7 @@
         nics:
           - net-id: "{{ gui_network_id[0] }}"
         security_groups: default
-        timeout: 300
+        timeout: 3600
 
     - name: Gather facts about the created servers
       shell: openstack --os-auth-url "http://10.10.7.205:35357/v3" --os-username admin --os-project-name admin --os-tenant-name admin --os-password "contrail123" --os-default-domain-name default server list -f json

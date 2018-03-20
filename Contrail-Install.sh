@@ -5,15 +5,15 @@
 
 printf  "Contrail Setup Begins.\r"
 
-#ansible-playbook -i Contrail-Install/all.inv Contrail-Install/init.yml
-#printf  "Initialized the Destination VM\r"
-#sleep 2
+ansible-playbook -i Contrail-Install/all.inv Contrail-Install/init.yml
+printf  "Initialized the Destination VM\r"
+sleep 2
 
-#ansible-playbook -i Contrail-Install/all.inv Contrail-Install/01-contrail-server-manager.yml
-#printf  "Contrail Server Manager Installed.\r"
-#sleep 5
+ansible-playbook -i Contrail-Install/all.inv Contrail-Install/01-contrail-server-manager.yml
+printf  "Contrail Server Manager Installed.\r"
+sleep 5
 
-ansible-playbook -i Contrail-Install/all.inv Contrail-Install/02-deploy-networks2.yml
+ansible-playbook -i Contrail-Install/all.inv Contrail-Install/02-deploy-networks.yml
 printf  "Networks Deployed.\r"
 sleep 2
 
@@ -29,8 +29,8 @@ ansible-playbook -i Contrail-Install/all.inv Contrail-Install/05-create-flavors.
 printf  "Flavors were created.\r"
 sleep 2
 
-#ansible-playbook -i Contrail-Install/all.inv Contrail-Install/06-create-servers.yml
-#printf  "Servers were created succesfully.\r"
-#sleep 2
+ansible-playbook -i Contrail-Install/all.inv Contrail-Install/06-create-servers.yml
+printf  "Servers were created succesfully.\r"
+sleep 2
 
 printf "\n\nCONTRAIL SETUP COMPLETE.\n"
