@@ -2,23 +2,26 @@
 # All rights reserved.
 # command example: ansible-playbook -i all.inv 02-deploy-networks.yml
 ---
-- name: install contrail
+- name: DEPLOY NETWORKS
   hosts: contrail-ubuntu-vm
   gather_facts: false
-  vars:
-    openrc:
-      OS_PROJECT_DOMAIN_NAME: default
-      OS_USER_DOMAIN_NAME: default
-      OS_PROJECT_NAME: admin
-      OS_TENANT_NAME: admin
-      OS_USERNAME: admin
-      OS_PASSWORD: contrail123
-      OS_AUTH_URL: http://10.10.7.205:35357/v3
-      OS_INTERFACE: internal
-      OS_IDENTITY_API_VERSION: 3
-
-  environment: "{{ openrc }}"
   tasks:
+
+    - name: Import variables from the file /vars/contrail.info into 'info' variable
+      include_vars:
+        file: contrail.info
+        name: info
+
+    - name: Set necessary variables
+      set_fact:
+        os_auth:
+          auth_url: http://{{ info.host_vm[0].ip_address.split('/')[0] }}:35357/v3
+          username: admin
+          password: contrail123
+          project_name: admin
+          project_domain_name: default
+          user_domain_name: default
+
     - name: install shade
       pip:
         name: shade
@@ -33,12 +36,16 @@
 
     - name: Add heat_stack_owner role
       os_user_role:
+        auth: "{{ os_auth }}"
         user: admin
         role: heat_stack_owner
         project: admin
+      environment:
+        OS_IDENTITY_API_VERSION: 3
 
     - name: Install networks, subnet, and policy
       os_stack:
+        auth: "{{ os_auth }}"
         name: deploy-networks
         state: present
         template: "/root/scripts/deploy-networks.yml"
@@ -47,7 +54,7 @@
       wait_for: timeout=5
 
     - name: Gather facts about previously created networks
-      shell: openstack --os-auth-url "http://10.10.7.205:35357/v3" --os-username admin --os-project-name admin --os-tenant-name admin --os-password "contrail123" --os-default-domain-name default network list -f json
+      shell: openstack --os-auth-url "http://{{ info.host_vm[0].ip_address.split('/')[0] }}:35357/v3" --os-username admin --os-project-name admin --os-tenant-name admin --os-password "contrail123" --os-default-domain-name default network list -f json
       register: network_list
     - name: Display Networks
       set_fact:
@@ -59,7 +66,7 @@
           - "{{networks}}"
 
     - name: Gather facts about previously created subnets
-      shell: openstack --os-auth-url "http://10.10.7.205:35357/v3" --os-username admin --os-project-name admin --os-tenant-name admin --os-password "contrail123" --os-default-domain-name default subnet list -f json
+      shell: openstack --os-auth-url "http://{{ info.host_vm[0].ip_address.split('/')[0] }}:35357/v3" --os-username admin --os-project-name admin --os-tenant-name admin --os-password "contrail123" --os-default-domain-name default subnet list -f json
       register: network_list
     - name: Display Subnets
       set_fact:

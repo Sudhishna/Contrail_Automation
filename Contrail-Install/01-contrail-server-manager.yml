@@ -2,8 +2,10 @@
 # All rights reserved.
 # command example: ansible-playbook -i all.inv 01-contrail-server-manager.yml
 ---
-- name: install contrail
+- name: DEPLOY CONTRAIL
   hosts: contrail-ubuntu-vm
+  gather_facts: false
+
   tasks:
 
     - name: Import variables from the file /vars/contrail.info into 'info' variable

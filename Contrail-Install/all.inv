@@ -7,5 +7,3 @@ localhost ansible_connection=local
 [contrail-file-server]
 10.10.7.202
 
-[base-vm]
-192.168.57.138

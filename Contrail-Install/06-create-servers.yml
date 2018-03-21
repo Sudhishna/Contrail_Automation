@@ -2,15 +2,20 @@
 # All rights reserved.
 # command example: ansible-playbook -i all.inv 06-create-servers.yml
 ---
-- name: install contrail
+- name: CREATE SERVERS
   hosts: contrail-ubuntu-vm
   gather_facts: false
   tasks:
 
+    - name: Import variables from the file /vars/contrail.info into 'info' variable
+      include_vars:
+        file: contrail.info
+        name: info
+
     - name: Set necessary variables
       set_fact:
         os_auth:
-          auth_url: http://10.10.7.205:35357/v3
+          auth_url: http://{{ info.host_vm[0].ip_address.split('/')[0] }}:35357/v3
           username: admin
           password: contrail123
           project_name: admin
@@ -100,7 +105,7 @@
         timeout: 3600
 
     - name: Gather facts about the created servers
-      shell: openstack --os-auth-url "http://10.10.7.205:35357/v3" --os-username admin --os-project-name admin --os-tenant-name admin --os-password "contrail123" --os-default-domain-name default server list -f json
+      shell: openstack --os-auth-url "http://{{ info.host_vm[0].ip_address.split('/')[0] }}:35357/v3" --os-username admin --os-project-name admin --os-tenant-name admin --os-password "contrail123" --os-default-domain-name default server list -f json
       register: server_list
 
     - name: Display Servers

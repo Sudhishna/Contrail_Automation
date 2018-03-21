@@ -1,16 +1,21 @@
 # Copyright 2018, Juniper Networks Pvt Ltd.
 # All rights reserved.
-# command example: ansible-playbook -i all.inv 05-create-flavors.yml
+# command example: ansible-playbook -i all.inv 04-image-upload.yml
 ---
-- name: install contrail
+- name: IMAGE UPLOAD
   hosts: contrail-ubuntu-vm
   gather_facts: false
   tasks:
 
+    - name: Import variables from the file /vars/contrail.info into 'info' variable
+      include_vars:
+        file: contrail.info
+        name: info
+
     - name: Set necessary variables
       set_fact:
         os_auth:
-          auth_url: http://10.10.7.205:35357/v3
+          auth_url: http://{{ info.host_vm[0].ip_address.split('/')[0] }}:35357/v3
           username: admin
           password: contrail123
           project_name: admin
@@ -18,12 +23,7 @@
           project_domain_name: default
           user_domain_name: default
 
-    - name: Import variables from the file /vars/contrail.info into 'info' variable
-      include_vars:
-        file: contrail.info
-        name: info
-
-    - name: download contrail-server-manager
+    - name: download ubuntu gui image
       get_url:
         url: http://{{ info.contrail_package[0].file_server }}/ubuntu-gui.qcow2
         dest: /root/images/ubuntu-gui.qcow2
@@ -65,7 +65,7 @@
         is_public: yes
 
     - name: Gather facts about previously created images
-      shell: openstack --os-auth-url "http://10.10.7.205:35357/v3" --os-username admin --os-project-name admin --os-tenant-name admin --os-password "contrail123" --os-default-domain-name default image list -f json
+      shell: openstack --os-auth-url "http://{{ info.host_vm[0].ip_address.split('/')[0] }}:35357/v3" --os-username admin --os-project-name admin --os-tenant-name admin --os-password "contrail123" --os-default-domain-name default image list -f json
       register: image_list
 
     - name: Display Images
