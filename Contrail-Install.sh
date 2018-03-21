@@ -3,8 +3,6 @@
 # Comannd example ./Contrail-Install.sh
 # Date written 2018 March 9
 
-#!/bin/bash
-
 echo ""
 echo "PROVIDE HOST VM DETAILS:"
 echo ""
@@ -87,18 +85,6 @@ do :;  done
 
 echo ""
 
-while
-    read -p 'Confirm the details (y/n): ' answer
-
-    if [ "$answer" = "n" ] || [ "$answer" = "N" ] || [ "$answer" = "no" ] || [ "$answer" = "No" ] || [ "$answer" = "NO" ]
-    then
-        exit 1
-    elif [ "$answer" = "y" ] || [ "$answer" = "Y" ] || [ "$answer" = "yes" ] || [ "$answer" = "Yes" ] || [ "$answer" = "YES" ]
-    then
-        break
-    fi
-do :;  done
-
 echo "contrail_package:
   -
     id: '$id'
@@ -132,13 +118,13 @@ ${file_ip[0]}
 
 printf  "Contrail Setup Begins.\r"
 
-#ansible-playbook -i Contrail-Install/all.inv Contrail-Install/init.yml
-#printf  "Initialized the Destination VM\r"
-#sleep 2
+ansible-playbook -i Contrail-Install/all.inv Contrail-Install/init.yml
+printf  "Initialized the Destination VM\r"
+sleep 2
 
-#ansible-playbook -i Contrail-Install/all.inv Contrail-Install/01-contrail-server-manager.yml
-#printf  "Contrail Deployed.\r"
-#sleep 5
+ansible-playbook -i Contrail-Install/all.inv Contrail-Install/01-contrail-server-manager.yml
+printf  "Contrail Deployed.\r"
+sleep 5
 
 ansible-playbook -i Contrail-Install/all.inv Contrail-Install/02-deploy-networks.yml
 printf  "Networks Deployed.\r"
