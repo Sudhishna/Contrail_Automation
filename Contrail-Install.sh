@@ -13,7 +13,7 @@ echo "To accept default values in the bracket click enter."
 echo "###################################################"
 echo ""
 read -p 'Enter Hostname (ubuntu): ' hostname
-hostname=${hostname1:-ubuntu}
+hostname=${hostname:-ubuntu}
 
 read -p 'Enter Ubuntu Version (xenial): ' ubuntu_version
 ubuntu_version=${ubuntu_version:-xenial}
