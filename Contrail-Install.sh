@@ -35,7 +35,7 @@ default_gateway=${default_gateway:-10.10.10.1}
 
 echo ""
 while
-    read -p 'Confirm the details (y/n): ' answer
+    read -p 'Confirm the details (Y/n): ' answer
 
     if [ "$answer" = "n" ] || [ "$answer" = "N" ] || [ "$answer" = "no" ] || [ "$answer" = "No" ] || [ "$answer" = "NO" ]
     then
@@ -72,7 +72,21 @@ file_server=${file_server:-10.10.7.202}
 echo ""
 
 while
-    read -p 'Confirm the details (y/n): ' answer
+    read -p 'Confirm the details (Y/n): ' answer
+
+    if [ "$answer" = "n" ] || [ "$answer" = "N" ] || [ "$answer" = "no" ] || [ "$answer" = "No" ] || [ "$answer" = "NO" ]
+    then
+        exit 1
+    elif [ "$answer" = "y" ] || [ "$answer" = "Y" ] || [ "$answer" = "yes" ] || [ "$answer" = "Yes" ] || [ "$answer" = "YES" ]
+    then
+        break
+    fi
+do :;  done
+
+echo ""
+
+while
+    read -p 'START WITH THE CONTRAIL SETUP?? (Y/n): ' answer
 
     if [ "$answer" = "n" ] || [ "$answer" = "N" ] || [ "$answer" = "no" ] || [ "$answer" = "No" ] || [ "$answer" = "NO" ]
     then
@@ -116,34 +130,95 @@ ${vm_ip[0]}
 ${file_ip[0]}
 " > /root/Contrail_Automation/Contrail-Install/all.inv
 
-printf  "Contrail Setup Begins.\r"
+echo ""
+echo ""
+echo "##############################################################"
+echo "                     CONTRAIL SETUP BEGINS"
+echo "##############################################################"
+echo ""
+echo ""
 
+echo ""
+echo ""
+echo "##############################################################"
+echo "              Initialize the Destination VM"
+echo "##############################################################"
+echo ""
+echo ""
 ansible-playbook -i Contrail-Install/all.inv Contrail-Install/init.yml
-printf  "Initialized the Destination VM\r"
+echo "################## Intialize - Complete ######################"
 sleep 2
 
+echo ""
+echo ""
+echo "##############################################################"
+echo "                      Contrail Deploy"
+echo "##############################################################"
+echo ""
+echo ""
 ansible-playbook -i Contrail-Install/all.inv Contrail-Install/01-contrail-server-manager.yml
-printf  "Contrail Deployed.\r"
+echo "################# Contrail Deploy - Complete #################"
 sleep 5
 
+echo ""
+echo ""
+echo "##############################################################"
+echo "                        Network Deploy"
+echo "##############################################################"
+echo ""
+echo ""
 ansible-playbook -i Contrail-Install/all.inv Contrail-Install/02-deploy-networks.yml
-printf  "Networks Deployed.\r"
+echo "################## Network Deploy - Complete #################"
 sleep 2
 
+echo ""
+echo ""
+echo "##############################################################"
+echo "                      Image Preparation"
+echo "##############################################################"
+echo ""
+echo ""
 ansible-playbook -i Contrail-Install/all.inv Contrail-Install/03-image-prep/image-prep.yml
-printf  "Prepared Images.\r"
+echo "################# Image Preparation - Complete ################"
 sleep 2
 
+echo ""
+echo ""
+echo "##############################################################"
+echo "                        Image Upload"
+echo "##############################################################"
+echo ""
+echo ""
 ansible-playbook -i Contrail-Install/all.inv Contrail-Install/04-image-upload.yml
-printf  "Uploaded the Images to glance.\r"
+echo "################## Image Upload - Complete ###################"
 sleep 2
 
+echo ""
+echo ""
+echo "##############################################################"
+echo "                            Flavors"
+echo "##############################################################"
+echo ""
+echo ""
 ansible-playbook -i Contrail-Install/all.inv Contrail-Install/05-create-flavors.yml
 printf  "Flavors were created.\r"
+echo "####################### Flavors - Complete ###################"
 sleep 2
 
+echo ""
+echo ""
+echo "##############################################################"
+echo "                        Server Creation"
+echo "##############################################################"
+echo ""
+echo ""
 ansible-playbook -i Contrail-Install/all.inv Contrail-Install/06-create-servers.yml
-printf  "Servers were created succesfully.\r"
+echo "################## Server Creation - Complete #################"
 sleep 2
 
 printf "\n\nCONTRAIL SETUP COMPLETE.\n"
+echo ""
+echo ""
+echo "################### CONTRAIL SETUP COMPLETE ###################"
+echo ""
+echo ""
