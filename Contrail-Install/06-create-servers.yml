@@ -53,11 +53,22 @@
         security_groups: default
         timeout: 3600
         userdata: |
-          #cloud-config
-          chpasswd:
-            list: |
-              password: juniper123
-            expire: False
+          #!/bin/bash
+          sh /root/dbfb.sh
+        
+    - name: Gather server facts from the DB Server
+      os_server_facts:
+        auth: "{{ os_auth }}"
+        server: db
+        
+    - name: Get the IP address of DB server
+      set_fact:
+        db_server_ip: "{{ openstack_servers | json_query(jq_dbip) }}"
+      vars:
+        jq_dbip: "[?name=='db'].private_v4"
+    - debug:
+        msg:
+          - "{{ db_server_ip }}"
 
     - name: Create WEBSERVER SECONDARY
       os_server:
@@ -70,12 +81,23 @@
         security_groups: default
         timeout: 3600
         userdata: |
-          #cloud-config
-          chpasswd:
-            list: |
-              password: juniper123
-            expire: False
+          #!/bin/bash
+          sh /root/secfb.sh
 
+    - name: Gather server facts from the secondary webserver
+      os_server_facts:
+        auth: "{{ os_auth }}"
+        server: webserver_secondary
+        
+    - name: Get the IP address of secondary web server
+      set_fact:
+        ws_sec_server_ip: "{{ openstack_servers | json_query(jq_sec_ip) }}"
+      vars:
+        jq_sec_ip: "[?name=='webserver_secondary'].private_v4"
+    - debug:
+        msg:
+          - "{{ ws_sec_server_ip }}"
+          
     - name: Create WEBSERVER PRIMARY
       os_server:
         auth: "{{ os_auth }}"
@@ -87,11 +109,14 @@
         security_groups: default
         timeout: 3600
         userdata: |
-          #cloud-config
-          chpasswd:
-            list: |
-              password: juniper123
-            expire: False
+          #!/bin/bash
+          touch /root/ips
+          echo "{{ db_ip }}" >> /root/ips
+          echo "{{ ws_ip }}" >> /root/ips
+          sh /root/primaryfb.sh
+      vars:
+        db_ip: "{{ db_server_ip[0] }}"
+        ws_ip: "{{ ws_sec_server_ip[0] }}"
 
     - name: Create GUI SERVER
       os_server:
