@@ -13,9 +13,14 @@
   - name: create images directory
     file: state=directory path=~/images
 
-  - name: copy the shell scripts required
+  - name: copy the firstboot shell scripts required
     copy:
-      src: /root/Contrail_Automation/Contrail-Install/03-image-prep/image-prep
+      src: /root/Contrail_Automation/Contrail-Install/03-image-prep/firstboots
+      dest: /root/
+      
+  - name: copy the config shell scripts required
+    copy:
+      src: /root/Contrail_Automation/Contrail-Install/03-image-prep/configs
       dest: /root/
 
   - name: Install libguestfs tools
@@ -32,6 +37,11 @@
     apt:
       name: jq
       state: present
+      
+  - name: Check if file guestfs_patched exists
+    stat:
+      path: /root/guestfs_patched
+    register: patch_result
 
   - name: Workaround for Ubuntu Xenial (https://bugs.launchpad.net/ubuntu/+source/isc-dhcp/+bug/1650740)
     shell: |
@@ -39,9 +49,11 @@
       sed -i '/if test "$guestfs_network" = 1; then/a\ \ \ \ touch /etc/fstab' init
       tar -czvf init.tar.gz init
       rm init
+      touch /root/guestfs_patched
     args:
       executable: /bin/bash
       chdir: /usr/lib/x86_64-linux-gnu/guestfs/supermin.d
+    when: patch_result.stat.exists == False
 
   - name: Get the latest ubuntu xenial cloud image url
     shell: |
@@ -73,7 +85,7 @@
   
   - name: Check if secondary webserver first-boot file is present
     stat:
-      path: /root/image-prep/ws-sec-fb.sh
+      path: /root/firstboots/secfb
     register: ws_sec_sym
       
   - debug:
@@ -94,7 +106,7 @@
 
   - name: Check if primary webserver first-boot file is present
     stat:
-      path: /root/image-prep/ws-primary-fb.sh
+      path: /root/firstboots/primaryfb
     register: ws_pri_sym
 
   - debug:
@@ -115,7 +127,7 @@
 
   - name: Check if DB Server first-boot file is present
     stat:
-      path: /root/image-prep/db-fb.sh
+      path: /root/firstboots/dbfb
     register: db_sym
 
   - debug:
