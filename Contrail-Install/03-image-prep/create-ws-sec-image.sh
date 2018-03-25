@@ -1,13 +1,13 @@
 #Make a copy of original ubuntu image to work upon
-cp images/ubuntu-image.img images/ubuntu-sec.img
+cp images/ubuntu-image.img images/ubuntu-webserver-secondary.img
 
 #set environment for libvirt
 export LIBGUESTFS_BACKEND=direct
 
 #customize the webserver secondary image
-virt-customize -a images/ubuntu-sec.img \
+virt-customize -a images/ubuntu-webserver-secondary.img \
 --root-password password:juniper123 \
---hostname ws-sec \
+--hostname ws-secondary \
 --run-command 'echo "ubuntu ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/ubuntu' \
 --chmod 0440:/etc/sudoers.d/ubuntu \
 --copy-in firstboots/secfb.sh:/root/ \
