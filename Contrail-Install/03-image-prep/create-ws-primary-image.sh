@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Copy the original ubuntu image to primary image
-cp images/ubuntu-image.img images/ubuntu-primary.img
+cp images/ubuntu-image.img images/ubuntu-webserver-primary.img
 
 # Customize the image
-virt-customize -a images/ubuntu-primary.img \
+virt-customize -a images/ubuntu-webserver-primary.img \
 --root-password password:juniper123 \
 --hostname ws-primary \
 --run-command 'echo "ubuntu ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/ubuntu' \
