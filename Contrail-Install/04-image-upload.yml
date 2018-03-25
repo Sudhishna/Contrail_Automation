@@ -25,16 +25,16 @@
 
     - name: download ubuntu gui image
       get_url:
-        url: http://{{ info.contrail_package[0].file_server }}/ubuntu-gui.qcow2
-        dest: /root/images/ubuntu-gui.qcow2
+        url: http://{{ info.contrail_package[0].file_server }}/gui-img-flat.vmdk
+        dest: /root/images/gui-img-flat.vmdk
 
     - name: Upload GUI Image
       os_image:
         auth: "{{ os_auth }}"
         name: gui_image
         container_format: bare
-        disk_format: qcow2
-        filename: /root/images/ubuntu-gui.qcow2
+        disk_format: vmdk
+        filename: /root/images/gui-img-flat.vmdk
         is_public: yes
 
     - name: Upload Primary Image 
