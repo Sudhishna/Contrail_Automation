@@ -25,8 +25,8 @@
 
     - name: download ubuntu gui image
       get_url:
-        url: http://{{ info.contrail_package[0].file_server }}/gui-img-flat.vmdk
-        dest: /root/images/gui-img-flat.vmdk
+        url: http://releases.ubuntu.com/17.10/ubuntu-17.10.1-desktop-amd64.iso
+        dest: /root/images/gui-image.iso
 
     - name: Upload GUI Image
       os_image:
@@ -34,7 +34,7 @@
         name: gui_image
         container_format: bare
         disk_format: vmdk
-        filename: /root/images/gui-img-flat.vmdk
+        filename: /root/images/gui-image.iso
         is_public: yes
 
     - name: Upload Primary Image 
