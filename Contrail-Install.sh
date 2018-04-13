@@ -4,19 +4,6 @@
 # Date written 2018 March 9
 
 echo ""
-echo "PROVIDE CONTRAIL TARGET MACHINE DETAILS:"
-echo ""
-echo "###################################################"
-echo "You can fetch the TARGET details from the "
-echo "destinaton machine using the command 'ifconfig'."
-echo "###################################################"
-echo ""
-read -p 'Enter Username: ' username
-read -p 'Enter Password: ' password
-read -p 'Enter Management Interface Name: ' mgmt_iface
-echo " Fetching details from the destination"
-
-echo ""
 echo " **************************************************"
 echo "      CONTRAIL HA-WEBSERVER DEPLOYMENT PROCESS"
 echo " **************************************************"
@@ -26,6 +13,7 @@ id=${id:-dc135}
 
 cp /root/BuildAutomationSystem/target_info.txt /root/Contrail_Automation/
 cp /root/BuildAutomationSystem/Info.txt /root/Contrail_Automation/
+
 hostname=`grep "hostname" target_info.txt | awk -F' ' '{print $2}'`
 ip=`grep "ip" target_info.txt | awk -F' ' '{print $2}'`
 mac=`grep "mac" target_info.txt | awk -F' ' '{print $2}'`
@@ -253,5 +241,3 @@ echo "                   User: adminuser"
 echo "                   Password: password"
 echo ""
 echo "################################################################################################"
-
-
