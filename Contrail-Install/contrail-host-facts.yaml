@@ -1,1 +1,8 @@
-
+# Copyright 2018, Juniper Networks Pvt Ltd.
+# All rights reserved.
+---
+- name: Collect facts from the contrail host machine
+  hosts: "{{ target }}"
+  gather_facts: no
+  tasks:
+  
