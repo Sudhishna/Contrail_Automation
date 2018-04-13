@@ -14,6 +14,8 @@ echo ""
 read -p 'Enter Username: ' username
 read -p 'Enter Password: ' password
 read -p 'Enter Management Interface Name: ' mgmt_iface
+echo " Fetching details from the destination"
+ssh
 
 
 
