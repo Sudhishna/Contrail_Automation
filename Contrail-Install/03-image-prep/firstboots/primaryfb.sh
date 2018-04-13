@@ -33,7 +33,7 @@ service lsyncd restart
 
 #Get my ip address
 MY_IFACE=`route | grep '^default' | grep -o '[^ ]*$'`
-MY_IP=`/sbin/ifconfig $MY_FACE $1 | grep "inet" | awk -F' ' '{print $2}'| awk -F ':' '{print $2}'|awk "NR==1"`
+MY_IP=`/sbin/ifconfig $MY_IFACE $1 | grep "inet" | awk -F' ' '{print $2}'| awk -F ':' '{print $2}'|awk "NR==1"`
 echo "my ip:"
 echo $MY_IP
 BASE_URL="http://$MY_IP"
