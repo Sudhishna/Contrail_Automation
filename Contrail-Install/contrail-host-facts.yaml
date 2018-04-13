@@ -5,4 +5,5 @@
   hosts: "{{ target }}"
   gather_facts: no
   tasks:
-  
+  - name: Install 
+  - name: Get the cidr of the network
