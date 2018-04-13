@@ -15,53 +15,70 @@ read -p 'Enter Username: ' username
 read -p 'Enter Password: ' password
 read -p 'Enter Management Interface Name: ' mgmt_iface
 echo " Fetching details from the destination"
-ssh
-
-
 
 echo ""
-while
-    read -p 'Confirm the details (Y/n): ' answer
-
-    if [ "$answer" = "n" ] || [ "$answer" = "N" ] || [ "$answer" = "no" ] || [ "$answer" = "No" ] || [ "$answer" = "NO" ]
-    then
-        exit 1
-    elif [ "$answer" = "y" ] || [ "$answer" = "Y" ] || [ "$answer" = "yes" ] || [ "$answer" = "Yes" ] || [ "$answer" = "YES" ]
-    then
-        break
-    fi
-do :;  done
-
-echo "---------------------------------------------------"
+echo " **************************************************"
+echo "      CONTRAIL HA-WEBSERVER DEPLOYMENT PROCESS"
+echo " **************************************************"
 echo ""
-echo "PROVIDE CONTRAIL PACKAGE DETAILS:"
-echo ""
-echo "###################################################"
-echo "To accept default values in the bracket click enter."
-echo "###################################################"
-echo ""
-read -p 'Enter cluster id (dc135): ' id
+read -p 'Enter Contrail Cluster ID : ' id
 id=${id:-dc135}
 
-read -p 'Enter Contrail Version (4.1.0.0-8): ' contrail_version
-contrail_version=${contrail_version:-4.1.0.0-8}
-
-read -p 'Enter Package SKU (ocata): ' package_sku
-package_sku=${package_sku:-ocata}
-
-read -p 'Enter openstack_release (4.0.0): ' openstack_release
-openstack_release=${openstack_release:-4.0.0}
-
-read -p 'Enter FILE SERVER IP (10.10.7.202): ' file_server
-file_server=${file_server:-10.10.7.202}
+cp /root/BuildAutomationSystem/target_info.txt /root/Contrail_Automation/
+cp /root/BuildAutomationSystem/Info.txt /root/Contrail_Automation/
+hostname=`grep "hostname" target_info.txt | awk -F' ' '{print $2}'`
+ip=`grep "ip" target_info.txt | awk -F' ' '{print $2}'`
+mac=`grep "mac" target_info.txt | awk -F' ' '{print $2}'`
+gw=`grep "mac" target_info.txt | awk -F' ' '{print $2}'`
+iface=`grep "iface" target_info.txt | awk -F' ' '{print $2}'
+ubuntu_version=`grep "ubuntu-version" target_info.txt | awk -F' ' '{print $2}'`
+contrail_version=`grep "contrail-version" target_info.txt | awk -F' ' '{print $2}'`
+openstack_version=`grep "openstack-version" target_info.txt | awk -F' ' '{print $2}'`
+file_server=`awk 'NR==2' Info.txt`
+openstack_release=4.0.0
 
 echo ""
+echo ""
+echo " ********************************************"
+echo "           TARGET MACHINE DETAILS"
+echo " ********************************************"
+echo ""
+echo " * HOSTNAME: $hostname"
+echo ""
+echo " * IP ADDRESS/CIDR : $ip"
+echo ""
+echo " * GATEWAY: $gw"
+echo ""
+echo " * MAC ADDRESS: $gw"
+echo ""
+echo " * UBUNTU OS VERSION: $ubuntu_version "
+echo ""
+echo ""
+echo " ********************************************"
+echo "           CONTRAIL SETUP DETAILS"
+echo " ********************************************"
+echo ""
+echo " * CLUSTER ID: $id"
+echo ""
+echo " * CONTRAIL VERSION: $contrail_version"
+echo ""
+echo " * OPENSTACK SKU: $openstack_version"
+echo ""
+echo " * OPENSTACK RELEASE: $openstack_release"
+echo ""
+echo " * FILE SERVER: $file_server"
+echo ""
+echo " ********************************************"
+
 
 while
-    read -p 'Confirm the details (Y/n): ' answer
+    read -p 'Confirm the details (Y/N): ' answer
 
     if [ "$answer" = "n" ] || [ "$answer" = "N" ] || [ "$answer" = "no" ] || [ "$answer" = "No" ] || [ "$answer" = "NO" ]
     then
+        echo "Important: Please edit the target machine and contrail setup details in the file /root/Contrail_Automation/target_info.txt"
+        echo "Edit file server IP in line 2 of /root/Contrail_Automation/Info.txt"
+        echo "After editing, run the setup file ./Contrail-Install.sh"
         exit 1
     elif [ "$answer" = "y" ] || [ "$answer" = "Y" ] || [ "$answer" = "yes" ] || [ "$answer" = "Yes" ] || [ "$answer" = "YES" ]
     then
@@ -70,9 +87,11 @@ while
 do :;  done
 
 echo ""
+echo " ********************************************"
+echo ""
 
 while
-    read -p 'START WITH THE CONTRAIL SETUP?? (Y/n): ' answer
+    read -p 'PROCEED WITH THE CONTRAIL SETUP?? (Y/n): ' answer
 
     if [ "$answer" = "n" ] || [ "$answer" = "N" ] || [ "$answer" = "no" ] || [ "$answer" = "No" ] || [ "$answer" = "NO" ]
     then
@@ -89,18 +108,17 @@ echo "contrail_package:
   -
     id: '$id'
     contrail_version: '$contrail_version'
-    package_sku: '$package_sku'
+    openstack_sku: '$openstack_version'
     openstack_release: '$openstack_release'
     file_server: '$file_server'
 host_vm:
   -
     hostname: '$hostname'
     ubuntu_version: '$ubuntu_version'
-    password: '$password'
-    management_interface: '$management_interface'
-    mac_address: '$mac_address'
-    ip_address: '$ip_address'
-    default_gateway: '$default_gateway'
+    mac_address: '$mac'
+    ip_address: '$ip'
+    default_gateway: '$gw'
+    management_interface: '$iface'
 " > /root/Contrail_Automation/Contrail-Install/vars/contrail.info
 
 IFS='/' read -r -a vm_ip <<< "$ip_address"
@@ -223,7 +241,7 @@ echo "                   Password: juniper123"
 echo ""
 echo "                   ################ Other nodes credentials ###############"
 echo "                   Username: root"
-echo "                   Password juniper123"
+echo "                   Password: juniper123"
 echo ""
 echo "                   ################### Database details ###################"
 echo "                   Name: wordpress"
