@@ -4,15 +4,14 @@
 # Date written 2018 March 9
 
 echo ""
-echo "PROVIDE HOST VM DETAILS:"
+echo "PROVIDE CONTRAIL TARGET MACHINE DETAILS:"
 echo ""
 echo "###################################################"
-echo "You can fetch the HOST VM details from the "
-echo "destinaton vm using the command 'ifconfig'."
-echo "To accept default values in the bracket click enter."
+echo "You can fetch the TARGET details from the "
+echo "destinaton machine using the command 'ifconfig'."
 echo "###################################################"
 echo ""
-read -p 'Enter Hostname (ubuntu): ' hostname
+read -p 'Enter Hostname: ' hostname
 hostname=${hostname:-ubuntu}
 
 read -p 'Enter Ubuntu Version (xenial): ' ubuntu_version
@@ -24,13 +23,13 @@ password=${password:-c0ntrail123}
 read -p 'Enter Management Interface (eno3): ' management_interface
 management_interface=${management_interface:-eno3}
 
-read -p 'Enter Mac Address (14:18:77:46:05:67): ' mac_address
+read -p 'Enter Mac Address : ' mac_address
 mac_address=${mac_address:-14:18:77:46:05:67}
 
-read -p 'Enter IP Address (10.10.7.205/20): ' ip_address
+read -p 'Enter IP Address : ' ip_address
 ip_address=${ip_address:-10.10.7.205/20}
 
-read -p 'Enter Default Gateway (10.10.10.1): ' default_gateway
+read -p 'Enter Default Gateway : ' default_gateway
 default_gateway=${default_gateway:-10.10.10.1}
 
 echo ""
