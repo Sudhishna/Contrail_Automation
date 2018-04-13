@@ -5,5 +5,17 @@
   hosts: "{{ target }}"
   gather_facts: no
   tasks:
-  - name: Install 
+  - name: Install sipcalc
+    apt:
+      name: sipcalc
+      
   - name: Get the cidr of the network
+    shell: |
+      sipcalc "{{ iface }}" | grep 'Network mask (bits)'| awk 'NR==1'|awk -F' ' '{print $5}'
+    register: cidr
+    args:
+      executable: /bin/bash
+    
+  - debug:
+      msg: cidr.stdout-lines
+    
