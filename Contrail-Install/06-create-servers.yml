@@ -1,6 +1,7 @@
 # Copyright 2018, Juniper Networks Pvt Ltd.
 # All rights reserved.
 # command example: ansible-playbook -i all.inv 06-create-servers.yml
+# Authors: Sudhishna Sendhilvelan <ssendhil@juniper.net>, Lakshmi Rajan <lrajan@juniper.net>
 ---
 - name: CREATE SERVERS
   hosts: contrail-ubuntu-vm
