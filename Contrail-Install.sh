@@ -4,9 +4,8 @@
 # Date written 2018 March 9
 
 HOME_DIR=/root/
-INFO_PATH=$HOME_DIR/Contrail_Automation/Info.txt
+INFO_PATH=$HOME_DIR/Contrail_Automation/setup_info.txt
 DATA_PATH=$HOME_DIR/Contrail_Automation/contrail-host-data.txt
-cp /root/BuildAutomationSystem/Info.txt /root/Contrail_Automation/
 
 echo ""
 echo " **************************************************"
@@ -14,7 +13,7 @@ echo "      CONTRAIL HA-WEBSERVER DEPLOYMENT PROCESS"
 echo " **************************************************"
 echo ""
 echo ""
-echo "Populating data from Info.txt...."
+echo "Populating data from setup_info.txt...."
 echo ""
 ip=`awk 'NR==1' $INFO_PATH`
 file_server=`awk 'NR==2' $INFO_PATH`
