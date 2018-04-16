@@ -34,11 +34,11 @@ while true; do
         [Nn]* )
           echo "Enter new values, or press enter to accept default values"
           echo "********************************************************"
-          read -p 'Enter Management Interface Name ($miface): ' tempiface
+          read -p "Enter Management Interface Name ($miface): " tempiface
           miface=${tempiface:-miface}
-          read -p 'Enter Contrail Host Address ($ip): ' tempip
+          read -p "Enter Contrail Host Address ($ip): " tempip
           ip=${ip:-tempip}
-          read -p 'Enter File Server Ip ($file_server): ' tfs
+          read -p "Enter File Server Ip ($file_server): " tfs
           file_server=${file_server:-tfs}
           ;;
         * ) echo "Please answer y or n";;
@@ -126,22 +126,22 @@ while true; do
           echo "Enter new values, or press enter to accept default values"
           echo "********************************************************"
           echo "TARGET MACHINE DETAILS: "
-          read -p 'Enter Hostname ($hostname): ' temp
+          read -p "Enter Hostname ($hostname): " temp
           hostname=${temp:-hostname}
-          read -p 'Enter Default Gateway ($gw): ' temp
+          read -p "Enter Default Gateway ($gw): " temp
           gw=${temp:-gw}
-          read -p 'Enter Mac Address ($mac): ' temp
+          read -p "Enter Mac Address ($mac): " temp
           mac=${temp:-mac}
-          read -p 'Enter Ubuntu Version ($ubuntu_version): ' temp
+          read -p "Enter Ubuntu Version ($ubuntu_version): " temp
           ubuntu_version=${temp:-ubuntu_version}
           echo "SETUP DETAILS: "
-          read -p 'Enter cluster id ($cluster_id): ' temp
+          read -p "Enter cluster id ($cluster_id): " temp
           cluster_id=${temp:-cluster_id}
-          read -p 'Enter Contrail Version ($contrail_version): ' temp
+          read -p "Enter Contrail Version ($contrail_version): " temp
           contrail_version=${temp:-contrail_version}
-          read -p 'Enter Openstack SKU ($openstack_version): ' temp
+          read -p "Enter Openstack SKU ($openstack_version): " temp
           openstack_version=${temp:-openstack_version}
-          read -p 'Enter openstack_release ($openstack_release): ' temp
+          read -p "Enter openstack_release ($openstack_release): " temp
           openstack_release=${temp:-openstack_release}
           ;;
         * ) echo "Please answer y or n";;
