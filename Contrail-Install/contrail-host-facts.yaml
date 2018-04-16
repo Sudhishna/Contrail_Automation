@@ -2,7 +2,7 @@
 # All rights reserved.
 ---
 - name: Collect facts from the contrail host machine
-  hosts: ubuntu-contrail-vm
+  hosts: contrail-ubuntu-vm
   gather_facts: no
   tasks:
   - name: Install sipcalc
