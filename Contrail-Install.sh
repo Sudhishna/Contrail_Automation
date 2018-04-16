@@ -32,8 +32,9 @@ while true; do
   case $choice in
         [Yy]* ) break;;
         [Nn]* )
-          echo "Enter new values, or press enter to accept default values"
-          echo "********************************************************"
+          echo "Enter new values, or press enter"
+          echo "to accept default values"
+          echo "***********************************"
           read -p "Enter Management Interface Name ($miface): " tempiface
           miface=${tempiface:-$miface}
           read -p "Enter Contrail Host Address ($ip): " tempip
