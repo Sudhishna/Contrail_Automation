@@ -3,16 +3,61 @@
 # Comannd example ./Contrail-Install.sh
 # Date written 2018 March 9
 
+HOME_DIR=/root/
+INFO_PATH=$HOME_DIR/Contrail_Automation/Info.txt
+TARGET_INFO_PATH=
+cp /root/BuildAutomationSystem/Info.txt /root/Contrail_Automation/
+
 echo ""
 echo " **************************************************"
 echo "      CONTRAIL HA-WEBSERVER DEPLOYMENT PROCESS"
 echo " **************************************************"
 echo ""
-read -p 'Enter Contrail Cluster ID : ' id
-id=${id:-dc135}
+echo ""
+echo "Populating data from Info.txt...."
+echo ""
+ip=`awk 'NR==1' $INFO_PATH`
+file_server=`awk 'NR==2' $INFO_PATH`
+miface=`awk 'NR==3' $INFO_PATH`
 
-cp /root/BuildAutomationSystem/target_info.txt /root/Contrail_Automation/
-cp /root/BuildAutomationSystem/Info.txt /root/Contrail_Automation/
+
+echo "FILE SERVER"
+echo "IP Address: $file_server"
+echo "CONTRAIL HOST")
+echo " IP Address: $ip"
+echo " Management Iface Name: $miface"
+echo "***********************************")
+echo "***********************************")
+echo ""
+
+while true; do
+  read -p 'Confirm above details (Y?N) ? ' choice
+  case $choice in
+        [Yy]* ) break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer y or n";;
+    esac
+done
+
+# Write the ip addresses into the inventory file used by Ansible
+IFS='/' read -r -a vm_ip <<< "$ip"
+IFS='/' read -r -a file_ip <<< "$file_server"
+
+echo "[local]
+localhost ansible_connection=local
+
+[contrail-ubuntu-vm]
+${vm_ip[0]}
+
+[contrail-file-server]
+${file_ip[0]}
+" > /root/Contrail_Automation/Contrail-Install/all.inv
+
+#Fetch necessary info from the target host
+echo ""
+echo "Fetching info from Contrail host..."
+echo ""
+ansible-playbook -i Contrail-Install/all.inv Contrail-Install/contrail-host-facts.yml --extra-vars 'iface=$miface'
 
 hostname=`grep "hostname" target_info.txt | awk -F' ' '{print $2}'`
 ip=`grep "ip" target_info.txt | awk -F' ' '{print $2}'`
