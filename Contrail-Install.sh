@@ -19,20 +19,28 @@ ip=`grep "targetip" $INFO_PATH | awk -F' ' '{print $2}'`
 file_server=`grep "fileserverip" $INFO_PATH | awk -F' ' '{print $2}'`
 miface=`grep "mgmt-iface" $INFO_PATH | awk -F' ' '{print $2}'`
 
-echo "FILE SERVER"
-echo " IP Address: $file_server"
-echo "CONTRAIL HOST"
-echo " IP Address: $ip"
-echo " Management Iface Name: $miface"
-echo "***********************************"
-echo "***********************************"
-echo ""
-
 while true; do
+  echo "FILE SERVER"
+  echo " IP Address: $file_server"
+  echo "CONTRAIL HOST"
+  echo " IP Address: $ip"
+  echo " Management Iface Name: $miface"
+  echo "***********************************"
+  echo "***********************************"
+  echo ""
   read -p 'Confirm above details (Y?N) ? ' choice
   case $choice in
         [Yy]* ) break;;
-        [Nn]* ) exit;;
+        [Nn]* )
+          echo "Enter new values, or press enter to accept default values"
+          echo "********************************************************"
+          read -p 'Enter Management Interface Name ($miface): ' tempiface
+          miface=${tempiface:-miface}
+          read -p 'Enter Contrail Host Address ($ip): ' tempip
+          ip=${ip:-tempip}
+          read -p 'Enter File Server Ip ($file_server): ' tfs
+          file_server=${file_server:-tfs}
+          ;;
         * ) echo "Please answer y or n";;
     esac
 done
@@ -55,13 +63,13 @@ ${file_ip[0]}
 echo ""
 echo "Fetching info from Contrail host..."
 echo ""
-ansible-playbook -i Contrail-Install/all.inv Contrail-Install/contrail-host-facts.yaml --extra-vars 'iface=$miface'
+ansible-playbook -i Contrail-Install/all.inv Contrail-Install/contrail-host-facts.yaml --extra-vars "iface=$miface"
 
 hostname=`grep "hostname" $DATA_PATH | awk -F' ' '{print $2}'`
 ip=`grep "ip" $DATA_PATH | awk -F' ' '{print $2}'`
 mac=`grep "mac" $DATA_PATH | awk -F' ' '{print $2}'`
 gw=`grep "mac" $DATA_PATH | awk -F' ' '{print $2}'`
-iface=`grep "iface" $DATA_PATH | awk -F' ' '{print $2}'
+iface=`grep "iface" $DATA_PATH | awk -F' ' '{print $2}'`
 
 # Hardcoding values that may not change with deployment
 cluster_id=dc135
@@ -75,72 +83,81 @@ echo "openstack-version $openstack_version" >> $DATA_PATH
 echo "openstack-release $openstack_release" >> $DATA_PATH
 echo "cluster-id $cluster_id" >> $DATA_PATH
 
-echo ""
+while true; do
+  echo ""
+  echo ""
+  echo " ********************************************"
+  echo "           TARGET MACHINE DETAILS"
+  echo " ********************************************"
+  echo ""
+  echo " * HOSTNAME          : $hostname"
+  echo ""
+  echo " * MGMT IFACE        : $miface"
+  echo ""
+  echo " * IP ADDRESS/CIDR   : $ip"
+  echo ""
+  echo " * GATEWAY           : $gw"
+  echo ""
+  echo " * MAC ADDRESS       : $mac"
+  echo ""
+  echo " * UBUNTU OS VERSION : $ubuntu_version "
+  echo ""
+  echo ""
+  echo " ********************************************"
+  echo "           CONTRAIL SETUP DETAILS"
+  echo " ********************************************"
+  echo ""
+  echo " * CLUSTER ID        : $cluster_id"
+  echo ""
+  echo " * CONTRAIL VERSION  : $contrail_version"
+  echo ""
+  echo " * OPENSTACK SKU     : $openstack_version"
+  echo ""
+  echo " * OPENSTACK RELEASE : $openstack_release"
+  echo ""
+  echo " * FILE SERVER       : $file_server"
+  echo ""
+  echo " ********************************************"
+
+  read -p 'Confirm above details (Y?N) ? ' choice
+  case $choice in
+        [Yy]* ) break;;
+        [Nn]* )
+          echo "Enter new values, or press enter to accept default values"
+          echo "********************************************************"
+          echo "TARGET MACHINE DETAILS: "
+          read -p 'Enter Hostname ($hostname): ' temp
+          hostname=${temp:-hostname}
+          read -p 'Enter Default Gateway ($gw): ' temp
+          gw=${temp:-gw}
+          read -p 'Enter Mac Address ($mac): ' temp
+          mac=${temp:-mac}
+          read -p 'Enter Ubuntu Version ($ubuntu_version): ' temp
+          ubuntu_version=${temp:-ubuntu_version}
+          echo "SETUP DETAILS: "
+          read -p 'Enter cluster id ($cluster_id): ' temp
+          cluster_id=${temp:-cluster_id}
+          read -p 'Enter Contrail Version ($contrail_version): ' temp
+          contrail_version=${temp:-contrail_version}
+          read -p 'Enter Openstack SKU ($openstack_version): ' temp
+          openstack_version=${temp:-openstack_version}
+          read -p 'Enter openstack_release ($openstack_release): ' temp
+          openstack_release=${temp:-openstack_release}
+          ;;
+        * ) echo "Please answer y or n";;
+    esac
+ done
+ 
 echo ""
 echo " ********************************************"
-echo "           TARGET MACHINE DETAILS"
-echo " ********************************************"
 echo ""
-echo " * HOSTNAME          : $hostname"
-echo ""
-echo " * MGMT IFACE        : $miface"
-echo ""
-echo " * IP ADDRESS/CIDR   : $ip"
-echo ""
-echo " * GATEWAY           : $gw"
-echo ""
-echo " * MAC ADDRESS       : $gw"
-echo ""
-echo " * UBUNTU OS VERSION : $ubuntu_version "
-echo ""
-echo ""
-echo " ********************************************"
-echo "           CONTRAIL SETUP DETAILS"
-echo " ********************************************"
-echo ""
-echo " * CLUSTER ID        : $cluster_id"
-echo ""
-echo " * CONTRAIL VERSION  : $contrail_version"
-echo ""
-echo " * OPENSTACK SKU     : $openstack_version"
-echo ""
-echo " * OPENSTACK RELEASE : $openstack_release"
-echo ""
-echo " * FILE SERVER       : $file_server"
-echo ""
-echo " ********************************************"
-
-
-while
-    read -p 'Confirm the details (Y/N): ' answer
-
-    if [ "$answer" = "n" ] || [ "$answer" = "N" ] || [ "$answer" = "no" ] || [ "$answer" = "No" ] || [ "$answer" = "NO" ]
-    then
-        echo "Important: Please edit the target machine and contrail setup details in the file /root/Contrail_Automation/target_info.txt"
-        echo "Edit file server IP in line 2 of /root/Contrail_Automation/Info.txt"
-        echo "After editing, run the setup file ./Contrail-Install.sh"
-        exit 1
-    elif [ "$answer" = "y" ] || [ "$answer" = "Y" ] || [ "$answer" = "yes" ] || [ "$answer" = "Yes" ] || [ "$answer" = "YES" ]
-    then
-        break
-    fi
-do :;  done
-
-echo ""
-echo " ********************************************"
-echo ""
-
-while
-    read -p 'PROCEED WITH THE CONTRAIL SETUP?? (Y/n): ' answer
-
-    if [ "$answer" = "n" ] || [ "$answer" = "N" ] || [ "$answer" = "no" ] || [ "$answer" = "No" ] || [ "$answer" = "NO" ]
-    then
-        exit 1
-    elif [ "$answer" = "y" ] || [ "$answer" = "Y" ] || [ "$answer" = "yes" ] || [ "$answer" = "Yes" ] || [ "$answer" = "YES" ]
-    then
-        break
-    fi
-do :;  done
+read -p 'PROCEED WITH THE CONTRAIL SETUP?? (Y/n) ' choice
+  case $choice in
+        [Yy]* ) break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer y or n";;
+    esac
+done
 
 echo ""
 
