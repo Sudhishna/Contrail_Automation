@@ -1,5 +1,6 @@
 # Copyright 2018, Juniper Networks Pvt Ltd.
 # All rights reserved.
+# Author: Lakshmi Rajan <lrajan@juniper.net>
 ---
 - name: Collect facts from the contrail host machine
   hosts: contrail-ubuntu-vm
