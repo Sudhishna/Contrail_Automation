@@ -1,6 +1,7 @@
 # Copyright 2018, Juniper Networks Pvt Ltd.
 # All rights reserved.
 # command example: ansible-playbook -i all.inv 05-create-flavors.yml
+# Authors: Sudhishna Sendhilvelan <ssendhil@juniper.net>, Lakshmi Rajan <lrajan@juniper.net>
 ---
 - name: CREATE FLAVORS
   hosts: contrail-ubuntu-vm
