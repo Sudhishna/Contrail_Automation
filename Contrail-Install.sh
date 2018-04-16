@@ -69,16 +69,16 @@ ansible-playbook -i Contrail-Install/all.inv Contrail-Install/contrail-host-fact
 hostname=`grep "hostname" $DATA_PATH | awk -F' ' '{print $2}'`
 ip=`grep "ip" $DATA_PATH | awk -F' ' '{print $2}'`
 mac=`grep "mac" $DATA_PATH | awk -F' ' '{print $2}'`
-gw=`grep "mac" $DATA_PATH | awk -F' ' '{print $2}'`
+gw=`grep "gw" $DATA_PATH | awk -F' ' '{print $2}'`
 iface=`grep "iface" $DATA_PATH | awk -F' ' '{print $2}'`
 
 # Hardcoding values that may not change with deployment
 cluster_id=dc135
-ubuntu-version=xenial
+ubuntu_version=xenial
 contrail_version=4.1.0.0-8
 openstack_version=ocata
 openstack_release=4.0.0
-echo "ubuntu-version $ubuntu-version" >> $DATA_PATH
+echo "ubuntu-version $ubuntu_version" >> $DATA_PATH
 echo "contrail-version $contrail_version" >> $DATA_PATH
 echo "openstack-version $openstack_version" >> $DATA_PATH
 echo "openstack-release $openstack_release" >> $DATA_PATH
