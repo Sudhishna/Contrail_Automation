@@ -55,7 +55,7 @@ ${file_ip[0]}
 echo ""
 echo "Fetching info from Contrail host..."
 echo ""
-ansible-playbook -i Contrail-Install/all.inv Contrail-Install/contrail-host-facts.yml --extra-vars 'iface=$miface'
+ansible-playbook -i Contrail-Install/all.inv Contrail-Install/contrail-host-facts.yaml --extra-vars 'iface=$miface'
 
 hostname=`grep "hostname" $DATA_PATH | awk -F' ' '{print $2}'`
 ip=`grep "ip" $DATA_PATH | awk -F' ' '{print $2}'`
