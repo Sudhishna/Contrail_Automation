@@ -4,7 +4,7 @@
 # Date written 2018 March 9
 
 HOME_DIR=/root/
-INFO_PATH=$HOME_DIR/Contrail_Automation/setup_info.txt
+INFO_PATH=$HOME_DIR/Contrail_Automation/setup-info.txt
 DATA_PATH=$HOME_DIR/Contrail_Automation/contrail-host-data.txt
 
 echo ""
@@ -13,15 +13,14 @@ echo "      CONTRAIL HA-WEBSERVER DEPLOYMENT PROCESS"
 echo " **************************************************"
 echo ""
 echo ""
-echo "Populating data from setup_info.txt...."
+echo "Populating data from setup-info.txt...."
 echo ""
-ip=`awk 'NR==1' $INFO_PATH`
-file_server=`awk 'NR==2' $INFO_PATH`
-miface=`awk 'NR==3' $INFO_PATH`
-
+ip=`grep "targetip" $INFO_PATH | awk -F' ' '{print $2}'`
+file_server=`grep "fileserverip" $INFO_PATH | awk -F' ' '{print $2}'`
+miface=`grep "mgmt-iface" $INFO_PATH | awk -F' ' '{print $2}'`
 
 echo "FILE SERVER"
-echo "IP Address: $file_server"
+echo " IP Address: $file_server"
 echo "CONTRAIL HOST")
 echo " IP Address: $ip"
 echo " Management Iface Name: $miface"
