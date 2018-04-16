@@ -1,6 +1,7 @@
 # Copyright 2018, Juniper Networks Pvt Ltd.
 # All rights reserved.
 # command example: ansible-playbook -i all.inv 01-contrail-server-manager.yml
+# Authors: Sudhishna Sendhilvelan <ssendhil@juniper.net>
 ---
 - name: DEPLOY CONTRAIL
   hosts: contrail-ubuntu-vm
