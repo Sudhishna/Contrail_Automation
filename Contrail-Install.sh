@@ -124,6 +124,8 @@ while true; do
   case $choice in
         [Yy]* ) break;;
         [Nn]* )
+          echo ""
+          echo ""
           echo "Enter new values, or press enter to accept default values"
           echo "********************************************************"
           echo "TARGET MACHINE DETAILS: "
