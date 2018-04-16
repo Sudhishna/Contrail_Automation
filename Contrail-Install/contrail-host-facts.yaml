@@ -2,7 +2,7 @@
 # All rights reserved.
 ---
 - name: Collect facts from the contrail host machine
-  hosts: "{{ target }}"
+  hosts: ubuntu-contrail-vm
   gather_facts: no
   tasks:
   - name: Install sipcalc
@@ -17,5 +17,42 @@
       executable: /bin/bash
     
   - debug:
-      msg: cidr.stdout-lines
+      msg: cidr.stdout_lines
     
+  - name: Get the hostname of the target
+    shell: |
+      hostname
+    register: hostname
+    args:
+      executable: /bin/bash
+    
+  - debug:
+      msg: hostname.stdout_lines
+      
+  - name: Get the mac of the network interface
+    shell: |
+      /sbin/ifconfig "{{ iface }}" $1 | grep "HWaddr" | awk -F' ' '{print $5}'
+    register: mac
+    args:
+      executable: /bin/bash
+    
+  - debug:
+      msg: mac.stdout_lines
+      
+  - name: Get the gateway of the network interface
+    shell: |
+      ip route list dev "{{ iface }}" | awk ' /^default/ {print $3}'
+    register: gw
+    args:
+      executable: /bin/bash
+    
+  - debug:
+      msg: gw.stdout_lines
+      
+  - Save the collected data into a file
+    local_action: copy content="{{ item }} {{ vars[item] }}" dest=/root/Contrail_Automation/contrail-host-data.txt
+    with_items:
+      - cidr
+      - hostname
+      - gw
+      - mac
