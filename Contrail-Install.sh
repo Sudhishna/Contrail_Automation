@@ -51,6 +51,18 @@ ${vm_ip[0]}
 ${file_ip[0]}
 " > /root/Contrail_Automation/Contrail-Install/all.inv
 
+tee /tmp/get_target_details.sh << EOF
+ip=`/sbin/ifconfig $miface $1 | grep "inet" | awk -F' ' '{print $2}'| awk -F ':' '{print $2}'|awk "NR==1"`
+mac=`/sbin/ifconfig $miface $1 | grep "HWaddr" | awk -F' ' '{print $5}'`
+sipcalc $miface
+MY_CIDR=`sipcalc $miface|grep "Network mask (bits)"| awk "NR==1"|awk -F' ' '{print $5}'`
+MY_GW=`ip route list dev $miface | awk ' /^default/ {print $3}'`
+echo  "ip $MY_IP/$MY_CIDR" >> contrail_host_data.txt
+echo  "mac $mac" >> contrail_host_data.txt
+echo  "hostname $hostname" >> contrail_host_data.txt
+echo  "gw $gw" >> contrail_host_data.txt
+EOF
+
 #Fetch necessary info from the target host
 echo ""
 echo "Fetching info from Contrail host..."
@@ -63,7 +75,7 @@ mac=`grep "mac" $DATA_PATH | awk -F' ' '{print $2}'`
 gw=`grep "mac" $DATA_PATH | awk -F' ' '{print $2}'`
 iface=`grep "iface" $DATA_PATH | awk -F' ' '{print $2}'
 
-# Hardcoding values that may not chnage with deployment
+# Hardcoding values that may not change with deployment
 cluster_id=dc135
 ubuntu-version=xenial
 contrail_version=4.1.0.0-8
