@@ -14,7 +14,6 @@ echo " **************************************************"
 echo "      CONTRAIL HA-WEBSERVER DEPLOYMENT PROCESS"
 echo " **************************************************"
 echo ""
-echo ""
 echo "Populating data from setup-info.txt...."
 ip=`grep "targetip" $INFO_PATH | awk -F' ' '{print $2}'`
 file_server=`grep "fileserverip" $INFO_PATH | awk -F' ' '{print $2}'`
@@ -22,13 +21,11 @@ miface=`grep "mgmt-iface" $INFO_PATH | awk -F' ' '{print $2}'`
 
 while true; do
   echo ""
-  echo ""
   echo "FILE SERVER"
   echo " IP Address: $file_server"
   echo "CONTRAIL HOST"
   echo " IP Address: $ip"
   echo " Management Iface Name: $miface"
-  echo "***********************************"
   echo "***********************************"
   echo ""
   read -p 'Confirm above details (Y?N) ? ' choice
