@@ -1,6 +1,7 @@
 # Copyright 2018, Juniper Networks Pvt Ltd.
 # All rights reserved.
 # command example: ansible-playbook -i all.inv image-prep.yml
+# Authors: Sudhishna Sendhilvelan <ssendhil@juniper.net>, Lakshmi Rajan <lrajan@juniper.net>
 ---
 - name: PREPARE IMAGES
   hosts: contrail-ubuntu-vm
