@@ -7,6 +7,7 @@
 HOME_DIR=/root/
 INFO_PATH=$HOME_DIR/Contrail_Automation/setup-info.txt
 DATA_PATH=$HOME_DIR/Contrail_Automation/contrail-host-data.txt
+echo "" > $DATA_PATH
 
 echo ""
 echo " **************************************************"
