@@ -11,10 +11,13 @@
       
   - name: Get the cidr of the network
     shell: |
-      sipcalc "{{ iface }}" | grep 'Network mask (bits)'| awk 'NR==1'|awk -F' ' '{print $5}'
+      sipcalc "{{ iface }}" | grep 'Network mask (bits)'| awk 'NR==1'|awk -F ' ' '{print $5}'
     register: cidr
     args:
       executable: /bin/bash
+    
+  - name: Write to file contrail-host-data.txt
+    local_action: lineinfile path="/root/Contrail_Automation/contrail-host-data.txt" line=cidr "{{ cidr.stdout_lines }}"
     
   - debug:
       msg: cidr.stdout_lines
@@ -31,7 +34,7 @@
       
   - name: Get the mac of the network interface
     shell: |
-      /sbin/ifconfig "{{ iface }}" $1 | grep "HWaddr" | awk -F' ' '{print $5}'
+      /sbin/ifconfig "{{ iface }}" $1 | grep "HWaddr" | awk -F ' ' '{print $5}'
     register: mac
     args:
       executable: /bin/bash
@@ -48,12 +51,3 @@
     
   - debug:
       msg: gw.stdout_lines
-      
-  - Save the collected data into a file
-    local_action: copy content="{{ item }} {{ vars[item] }}" dest=/root/Contrail_Automation/contrail-host-data.txt
-    with_items:
-      - cidr
-      - hostname
-      - gw
-      - mac
-      - iface
