@@ -170,7 +170,7 @@ echo "contrail_package:
   -
     id: '$cluster_id'
     contrail_version: '$contrail_version'
-    openstack_sku: '$openstack_version'
+    package_sku: '$openstack_version'
     openstack_release: '$openstack_release'
     file_server: '$file_server'
 host_vm:
