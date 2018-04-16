@@ -1,3 +1,4 @@
+# Author: Lakshmi Rajan <lrajan@juniper.net>
 #Make a copy of original ubuntu image to work upon
 cp images/ubuntu-image.img images/ubuntu-webserver-secondary.img
 
