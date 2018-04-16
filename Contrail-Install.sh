@@ -14,12 +14,13 @@ echo " **************************************************"
 echo ""
 echo ""
 echo "Populating data from setup-info.txt...."
-echo ""
 ip=`grep "targetip" $INFO_PATH | awk -F' ' '{print $2}'`
 file_server=`grep "fileserverip" $INFO_PATH | awk -F' ' '{print $2}'`
 miface=`grep "mgmt-iface" $INFO_PATH | awk -F' ' '{print $2}'`
 
 while true; do
+  echo ""
+  echo ""
   echo "FILE SERVER"
   echo " IP Address: $file_server"
   echo "CONTRAIL HOST"
@@ -35,11 +36,11 @@ while true; do
           echo "Enter new values, or press enter to accept default values"
           echo "********************************************************"
           read -p "Enter Management Interface Name ($miface): " tempiface
-          miface=${tempiface:-miface}
+          miface=${tempiface:-$miface}
           read -p "Enter Contrail Host Address ($ip): " tempip
-          ip=${ip:-tempip}
+          ip=${tempip:-$ip}
           read -p "Enter File Server Ip ($file_server): " tfs
-          file_server=${file_server:-tfs}
+          file_server=${tfs:-$file_server}
           ;;
         * ) echo "Please answer y or n";;
     esac
@@ -127,22 +128,22 @@ while true; do
           echo "********************************************************"
           echo "TARGET MACHINE DETAILS: "
           read -p "Enter Hostname ($hostname): " temp
-          hostname=${temp:-hostname}
+          hostname=${temp:-$hostname}
           read -p "Enter Default Gateway ($gw): " temp
-          gw=${temp:-gw}
+          gw=${temp:-$gw}
           read -p "Enter Mac Address ($mac): " temp
-          mac=${temp:-mac}
+          mac=${temp:-$mac}
           read -p "Enter Ubuntu Version ($ubuntu_version): " temp
-          ubuntu_version=${temp:-ubuntu_version}
+          ubuntu_version=${temp:-$ubuntu_version}
           echo "SETUP DETAILS: "
           read -p "Enter cluster id ($cluster_id): " temp
-          cluster_id=${temp:-cluster_id}
+          cluster_id=${temp:-$cluster_id}
           read -p "Enter Contrail Version ($contrail_version): " temp
-          contrail_version=${temp:-contrail_version}
+          contrail_version=${temp:-$contrail_version}
           read -p "Enter Openstack SKU ($openstack_version): " temp
-          openstack_version=${temp:-openstack_version}
+          openstack_version=${temp:-$openstack_version}
           read -p "Enter openstack_release ($openstack_release): " temp
-          openstack_release=${temp:-openstack_release}
+          openstack_release=${temp:-$openstack_release}
           ;;
         * ) echo "Please answer y or n";;
     esac
