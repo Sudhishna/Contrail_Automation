@@ -1,4 +1,5 @@
 #!/bin/bash
+# Author:Lakshmi Rajan <lrajan@juniper.net>
 
 cp images/ubuntu-image.img images/ubuntu-db.img
 
