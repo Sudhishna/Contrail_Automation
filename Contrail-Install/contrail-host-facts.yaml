@@ -56,3 +56,4 @@
       - hostname
       - gw
       - mac
+      - iface
