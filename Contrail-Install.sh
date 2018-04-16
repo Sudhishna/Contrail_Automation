@@ -21,11 +21,11 @@ miface=`grep "mgmt-iface" $INFO_PATH | awk -F' ' '{print $2}'`
 
 echo "FILE SERVER"
 echo " IP Address: $file_server"
-echo "CONTRAIL HOST")
+echo "CONTRAIL HOST"
 echo " IP Address: $ip"
 echo " Management Iface Name: $miface"
-echo "***********************************")
-echo "***********************************")
+echo "***********************************"
+echo "***********************************"
 echo ""
 
 while true; do
