@@ -1,6 +1,7 @@
 #!/bin/bash
 # OPENSTACK 10 WITH CONTRAIL 4.1 INSTALLATION USING SERVER-MANAGER
 # Comannd example ./Contrail-Install.sh
+# Authors: Sudhishna Sendhilvelan <ssendhil@juniper.net>, Lakshmi Rajan <lrajan@juniper.net>
 # Date written 2018 March 9
 
 HOME_DIR=/root/
