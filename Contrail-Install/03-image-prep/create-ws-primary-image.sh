@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Author: Lakshmi Rajan <lrajan@juniper.net>
 # Copy the original ubuntu image to primary image
 cp images/ubuntu-image.img images/ubuntu-webserver-primary.img
 
