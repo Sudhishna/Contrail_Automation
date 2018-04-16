@@ -5,7 +5,7 @@
 
 HOME_DIR=/root/
 INFO_PATH=$HOME_DIR/Contrail_Automation/Info.txt
-TARGET_INFO_PATH=
+DATA_PATH=$HOME_DIR/Contrail_Automation/contrail-host-data.txt
 cp /root/BuildAutomationSystem/Info.txt /root/Contrail_Automation/
 
 echo ""
@@ -59,16 +59,23 @@ echo "Fetching info from Contrail host..."
 echo ""
 ansible-playbook -i Contrail-Install/all.inv Contrail-Install/contrail-host-facts.yml --extra-vars 'iface=$miface'
 
-hostname=`grep "hostname" target_info.txt | awk -F' ' '{print $2}'`
-ip=`grep "ip" target_info.txt | awk -F' ' '{print $2}'`
-mac=`grep "mac" target_info.txt | awk -F' ' '{print $2}'`
-gw=`grep "mac" target_info.txt | awk -F' ' '{print $2}'`
-iface=`grep "iface" target_info.txt | awk -F' ' '{print $2}'
-ubuntu_version=`grep "ubuntu-version" target_info.txt | awk -F' ' '{print $2}'`
-contrail_version=`grep "contrail-version" target_info.txt | awk -F' ' '{print $2}'`
-openstack_version=`grep "openstack-version" target_info.txt | awk -F' ' '{print $2}'`
-file_server=`awk 'NR==2' Info.txt`
-openstack_release=`grep "openstack-release" target_info.txt | awk -F' ' '{print $2}'`
+hostname=`grep "hostname" $DATA_PATH | awk -F' ' '{print $2}'`
+ip=`grep "ip" $DATA_PATH | awk -F' ' '{print $2}'`
+mac=`grep "mac" $DATA_PATH | awk -F' ' '{print $2}'`
+gw=`grep "mac" $DATA_PATH | awk -F' ' '{print $2}'`
+iface=`grep "iface" $DATA_PATH | awk -F' ' '{print $2}'
+
+# Hardcoding values that may not chnage with deployment
+cluster_id=dc135
+ubuntu-version=xenial
+contrail_version=4.1.0.0-8
+openstack_version=ocata
+openstack_release=4.0.0
+echo "ubuntu-version $ubuntu-version" >> $DATA_PATH
+echo "contrail-version $contrail_version" >> $DATA_PATH
+echo "openstack-version $openstack_version" >> $DATA_PATH
+echo "openstack-release $openstack_release" >> $DATA_PATH
+echo "cluster-id $cluster_id" >> $DATA_PATH
 
 echo ""
 echo ""
@@ -77,6 +84,8 @@ echo "           TARGET MACHINE DETAILS"
 echo " ********************************************"
 echo ""
 echo " * HOSTNAME          : $hostname"
+echo ""
+echo " * MGMT IFACE        : $miface"
 echo ""
 echo " * IP ADDRESS/CIDR   : $ip"
 echo ""
@@ -91,7 +100,7 @@ echo " ********************************************"
 echo "           CONTRAIL SETUP DETAILS"
 echo " ********************************************"
 echo ""
-echo " * CLUSTER ID        : $id"
+echo " * CLUSTER ID        : $cluster_id"
 echo ""
 echo " * CONTRAIL VERSION  : $contrail_version"
 echo ""
@@ -139,7 +148,7 @@ echo ""
 
 echo "contrail_package:
   -
-    id: '$id'
+    id: '$cluster_id'
     contrail_version: '$contrail_version'
     openstack_sku: '$openstack_version'
     openstack_release: '$openstack_release'
@@ -151,21 +160,8 @@ host_vm:
     mac_address: '$mac'
     ip_address: '$ip'
     default_gateway: '$gw'
-    management_interface: '$iface'
+    management_interface: '$miface'
 " > /root/Contrail_Automation/Contrail-Install/vars/contrail.info
-
-IFS='/' read -r -a vm_ip <<< "$ip_address"
-IFS='/' read -r -a file_ip <<< "$file_server"
-
-echo "[local]
-localhost ansible_connection=local
-
-[contrail-ubuntu-vm]
-${vm_ip[0]}
-
-[contrail-file-server]
-${file_ip[0]}
-" > /root/Contrail_Automation/Contrail-Install/all.inv
 
 echo ""
 echo ""
