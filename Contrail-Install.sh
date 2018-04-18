@@ -13,10 +13,12 @@ echo " **************************************************"
 echo "      CONTRAIL HA-WEBSERVER DEPLOYMENT PROCESS"
 echo " **************************************************"
 echo ""
+read -p "Enter Contrail Host IP Address ($ip): " tempip
+ip=${tempip:-$ip}
+read -s -p "Enter Contrail Host Password ($password): " temppassword
+password=${temppassword:-$password}
 read -p "Enter Management Interface Name ($miface): " tempiface
 miface=${tempiface:-$miface}
-read -p "Enter Contrail Host Address ($ip): " tempip
-ip=${tempip:-$ip}
 read -p "Enter File Server Ip ($file_server): " tfs
 file_server=${tfs:-$file_server}
 
@@ -70,6 +72,8 @@ while true; do
   echo " * MGMT IFACE        : $miface"
   echo ""
   echo " * IP ADDRESS/CIDR   : $ip"
+  echo ""
+  echo " * PASSWORD          : ************"
   echo ""
   echo " * GATEWAY           : $gw"
   echo ""
@@ -151,7 +155,7 @@ host_vm:
   -
     hostname: '$hostname'
     ubuntu_version: '$ubuntu_version'
-    password: 'contrail123'
+    password: '$password'
     mac_address: '$mac'
     ip_address: '$ip'
     default_gateway: '$gw'
