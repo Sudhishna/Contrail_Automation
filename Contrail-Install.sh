@@ -32,6 +32,7 @@ while true; do
   case $choice in
         [Yy]* ) break;;
         [Nn]* )
+          echo ""
           echo "Enter new values, or press enter"
           echo "to accept default values"
           echo "***********************************"
