@@ -37,11 +37,6 @@
         jq_webserver: "[?name=='webserver_network'].id"
         jq_gui: "[?name=='gui_network'].id"
         jq_db: "[?name=='db_network'].id"
-    - debug:
-        msg:
-          - "{{db_network_id}}"
-          - "{{gui_network_id}}"
-          - "{{webserver_network_id}}"
 
     - name: Create DB SERVER
       os_server:
