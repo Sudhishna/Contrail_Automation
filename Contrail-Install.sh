@@ -17,6 +17,7 @@ read -p "Enter Contrail Host IP Address ($ip): " tempip
 ip=${tempip:-$ip}
 read -s -p "Enter Contrail Host Password ($password): " temppassword
 password=${temppassword:-$password}
+echo ""
 read -p "Enter Management Interface Name ($miface): " tempiface
 miface=${tempiface:-$miface}
 read -p "Enter File Server Ip ($file_server): " tfs
