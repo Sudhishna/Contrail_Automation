@@ -40,6 +40,7 @@ ${file_ip[0]}
 echo ""
 echo "Fetching info from Contrail host..."
 echo ""
+ansible-playbook -i Contrail-Install/all.inv Contrail-Install/init.yml
 ansible-playbook -i Contrail-Install/all.inv Contrail-Install/contrail-host-facts.yaml --extra-vars "iface=$miface"
 
 hostname=`grep "hostname" $DATA_PATH | awk -F' ' '{print $2}'`
@@ -169,17 +170,6 @@ echo "                     CONTRAIL SETUP BEGINS"
 echo "##############################################################"
 echo ""
 echo ""
-
-echo ""
-echo ""
-echo "##############################################################"
-echo "              Initialize the Destination VM"
-echo "##############################################################"
-echo ""
-echo ""
-ansible-playbook -i Contrail-Install/all.inv Contrail-Install/init.yml
-echo "################## Intialize - Complete ######################"
-sleep 2
 
 echo ""
 echo ""
