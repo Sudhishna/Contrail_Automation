@@ -5,7 +5,6 @@
 # Date written 2018 March 9
 
 HOME_DIR=/root/
-INFO_PATH=$HOME_DIR/Contrail_Automation/setup-info.txt
 DATA_PATH=$HOME_DIR/Contrail_Automation/contrail-host-data.txt
 echo "" > $DATA_PATH
 
@@ -14,40 +13,12 @@ echo " **************************************************"
 echo "      CONTRAIL HA-WEBSERVER DEPLOYMENT PROCESS"
 echo " **************************************************"
 echo ""
-ip=`grep "targetip" $INFO_PATH | awk -F' ' '{print $2}'`
-file_server=`grep "fileserverip" $INFO_PATH | awk -F' ' '{print $2}'`
-miface=`grep "mgmt-iface" $INFO_PATH | awk -F' ' '{print $2}'`
-
-while true; do
-  echo ""
-  echo "***********************************"
-  echo ""
-  echo "FILE SERVER"
-  echo " IP Address: $file_server"
-  echo "CONTRAIL HOST"
-  echo " IP Address: $ip"
-  echo " Management Iface Name: $miface"
-  echo "***********************************"
-  echo ""
-  read -p 'Confirm above details (Y?N) ? ' choice
-  case $choice in
-        [Yy]* ) break;;
-        [Nn]* )
-          echo ""
-          echo "Enter new values, or press enter"
-          echo "to accept default values"
-          echo "***********************************"
-          read -p "Enter Management Interface Name ($miface): " tempiface
-          miface=${tempiface:-$miface}
-          read -p "Enter Contrail Host Address ($ip): " tempip
-          ip=${tempip:-$ip}
-          read -p "Enter File Server Ip ($file_server): " tfs
-          file_server=${tfs:-$file_server}
-          clear
-          ;;
-        * ) echo "Please answer y or n";;
-    esac
-done
+read -p "Enter Management Interface Name ($miface): " tempiface
+miface=${tempiface:-$miface}
+read -p "Enter Contrail Host Address ($ip): " tempip
+ip=${tempip:-$ip}
+read -p "Enter File Server Ip ($file_server): " tfs
+file_server=${tfs:-$file_server}
 
 # Write the ip addresses into the inventory file used by Ansible
 IFS='/' read -r -a vm_ip <<< "$ip"
