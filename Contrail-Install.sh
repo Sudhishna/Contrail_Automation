@@ -151,6 +151,7 @@ host_vm:
   -
     hostname: '$hostname'
     ubuntu_version: '$ubuntu_version'
+    password: 'contrail123'
     mac_address: '$mac'
     ip_address: '$ip'
     default_gateway: '$gw'
