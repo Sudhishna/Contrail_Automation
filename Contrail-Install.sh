@@ -41,6 +41,7 @@ while true; do
           ip=${tempip:-$ip}
           read -p "Enter File Server Ip ($file_server): " tfs
           file_server=${tfs:-$file_server}
+          clear
           ;;
         * ) echo "Please answer y or n";;
     esac
@@ -146,6 +147,7 @@ while true; do
           openstack_version=${temp:-$openstack_version}
           read -p " Enter openstack_release ($openstack_release): " temp
           openstack_release=${temp:-$openstack_release}
+          clear
           ;;
         * ) echo "Please answer y or n";;
     esac
