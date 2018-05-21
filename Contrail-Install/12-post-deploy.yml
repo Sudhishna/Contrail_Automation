@@ -17,6 +17,11 @@
   - fail:
       msg: No containers should  be in "restarting" state
     when: restarting_ones.stdout != "0" 
+    
+  - name: Install pip
+    yum:
+      name: pip
+      state: latest
       
   - name: Install shade
     pip:
