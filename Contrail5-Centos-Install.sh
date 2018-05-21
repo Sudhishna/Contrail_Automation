@@ -41,7 +41,7 @@ echo ""
 ansible-playbook -i Contrail-Install/all.inv Contrail-Install/contrail-host-facts-centos.yaml --extra-vars "iface=$miface"
 
 hostname=`grep "hostname" $DATA_PATH | awk -F' ' '{print $2}'`
-ip=`grep "ip" $DATA_PATH | awk -F' ' '{print $2}'`
+#ip=`grep "ip" $DATA_PATH | awk -F' ' '{print $2}'`
 mac=`grep "mac" $DATA_PATH | awk -F' ' '{print $2}'`
 gw=`grep "gw" $DATA_PATH | awk -F' ' '{print $2}'`
 
