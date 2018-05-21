@@ -14,7 +14,7 @@ echo "      CONTRAIL HA-WEBSERVER DEPLOYMENT PROCESS"
 echo "         BMS - SINGLE INTERFACE ALL-IN-ONE"
 echo " **************************************************"
 echo ""
-read -p "Enter Contrail Host IP Address (x.x.x.x) : " ip
+read -p "Enter Contrail Host IP Address (with CIDR) (x.x.x.x / xx) : " ip
 read -s -p "Enter Contrail Host Password : " password
 echo ""
 read -p "Enter Management Interface Name : " miface
@@ -32,7 +32,7 @@ localhost ansible_connection=local
 ${vm_ip[0]}
 [contrail-file-server]
 ${file_ip[0]}
-" > /root/contrail5.0-automation/Contrail-Install/all.inv
+" > /root/Contrail_Automation/Contrail-Install/all.inv
 
 #Fetch necessary info from the target host
 echo ""
@@ -125,7 +125,7 @@ host_vm:
     ip_address: '$ip'
     default_gateway: '$gw'
     management_interface: '$miface'
-" > /root/contrail5.0-automation/Contrail-Install/vars/contrail.info
+" > /root/Contrail_Automation/Contrail-Install/vars/contrail.info
 
 echo ""
 echo ""
