@@ -36,8 +36,8 @@
       os_nova_flavor:
          auth: "{{ os_auth }}"
          name: m1.small
-         ram: 2048
-         vcpus: 1
+         ram: 4096
+         vcpus: 2
          disk: 6
 
     - name: Gather facts about the created flavors
