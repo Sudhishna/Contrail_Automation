@@ -1,0 +1,31 @@
+# Copyright 2018, Juniper Networks Pvt Ltd.
+# All rights reserved.
+---
+- name: Prepare the centos VM for deployment
+  hosts: contrail-ubuntu-vm
+  gather_facts: no
+  tasks:
+    - name: Get epel release
+      yum:
+        name: epel-release
+        state: latest
+      
+    - name: Get Ansible
+      yum:
+        name: ansible-2.4.2.0
+        state: present
+        
+    - name: upgrade all packages
+      yum: name=* state=latest
+      
+    - name: Reboot server
+      command: /sbin/shutdown -r +1
+      async: 0
+      poll: 0
+      ignore_errors: true
+      
+    - name: The contrail host is rebooting. Please wait for it to come back... 
+      wait_for_connection:
+        delay: 300
+        sleep: 20
+        timeout: 900
