@@ -14,7 +14,7 @@ echo "      CONTRAIL HA-WEBSERVER DEPLOYMENT PROCESS"
 echo "         BMS - SINGLE INTERFACE ALL-IN-ONE"
 echo " **************************************************"
 echo ""
-read -p "Enter Contrail Host IP Address (with CIDR) (x.x.x.x / xx) : " ip
+read -p "Enter Contrail Host IP Address (with CIDR) (x.x.x.x/x) : " ip
 read -s -p "Enter Contrail Host Password : " password
 echo ""
 read -p "Enter Management Interface Name : " miface
