@@ -1,0 +1,58 @@
+# Copyright 2018, Juniper Networks Pvt Ltd.
+# All rights reserved.
+---
+- name: Post install tasks
+  hosts: contrail-ubuntu-vm
+  gather_facts: false
+  tasks:
+  - name: Check if all the containers are running
+    shell: |
+      docker ps --filter status=restarting|awk '{if(NR>1) print}'|wc -l
+    args:
+      executable: /bin/bash
+    register: restarting_ones
+  - debug:
+      var: restarting_ones.stdout_lines
+
+  - fail:
+      msg: No containers should  be in "restarting" state
+    when: restarting_ones.stdout != "0" 
+      
+  - name: Install shade
+    pip:
+      name: shade
+      
+  - name: Install gcc
+    yum:
+      name: gcc
+      state: latest
+      
+  - name: Install python-devel
+    yum:
+      name: python-devel
+      state: latest
+      
+  - name: Install python-openstackclient
+    pip:
+      name: python-openstackclient
+      state: latest
+
+  - name: Install python-ironicclient
+    pip:
+      name: python-ironicclient
+      state: latest
+      
+  - name: Install libguestfs
+    yum:
+      name: libguestfs
+      state: present
+      
+  - name: Install libguestfs tools
+    yum:
+      name: libguestfs-tools
+      state: present
+
+  - name: Install jq
+    yum:
+      name: jq
+      state: present
