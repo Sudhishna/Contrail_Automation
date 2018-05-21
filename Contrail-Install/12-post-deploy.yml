@@ -20,7 +20,7 @@
     
   - name: Install pip
     yum:
-      name: pip
+      name: python-pip
       state: latest
       
   - name: Install shade
