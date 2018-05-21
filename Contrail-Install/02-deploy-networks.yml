@@ -5,7 +5,7 @@
 ---
 - name: DEPLOY NETWORKS
   hosts: contrail-ubuntu-vm
-  gather_facts: false
+  gather_facts: true
   tasks:
 
     - name: Import variables from the file /vars/contrail.info into 'info' variable
@@ -46,7 +46,7 @@
       environment:
         OS_IDENTITY_API_VERSION: 3
       when: 
-        "{{ info.contrail_package[0].contrail_version }}" == "4.1.0.0-8"
+        info.contrail_package[0].contrail_version == "4.1.0.0-8"
 
     - name: Install networks, subnet, and policy
       os_stack:
