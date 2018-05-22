@@ -15,29 +15,29 @@
         name: info
 
     - name: create packages directory
-      file: state=directory path=~/packages
+      file: state=directory path=/root/packages
 
     - name: create json directory
-      file: state=directory path=~/json
+      file: state=directory path=/root/json
 
     - name: download contrail-server-manager
       get_url:
         url: http://{{ info.contrail_package[0].file_server }}/contrail-server-manager-installer_{{ info.contrail_package[0].contrail_version }}_{{ info.host_vm[0].ubuntu_version }}.deb
-        dest: ~/packages/contrail-server-manager-installer_{{ info.contrail_package[0].contrail_version }}_{{ info.host_vm[0].ubuntu_version }}.deb
+        dest: /root/packages/contrail-server-manager-installer_{{ info.contrail_package[0].contrail_version }}_{{ info.host_vm[0].ubuntu_version }}.deb
 
     - name: download contrail-cloud-docker
       get_url:
         url: http://{{ info.contrail_package[0].file_server }}/contrail-cloud-docker_{{ info.contrail_package[0].contrail_version }}-{{ info.contrail_package[0].package_sku}}_{{ info.host_vm[0].ubuntu_version }}.tgz
-        dest: ~/packages/contrail-cloud-docker_{{ info.contrail_package[0].contrail_version }}-{{ info.contrail_package[0].package_sku}}_{{ info.host_vm[0].ubuntu_version }}.tgz
+        dest: /root/packages/contrail-cloud-docker_{{ info.contrail_package[0].contrail_version }}-{{ info.contrail_package[0].package_sku}}_{{ info.host_vm[0].ubuntu_version }}.tgz
 
     - name: parametrized template - a
       template:
-        src: ~/Contrail_Automation/templates/contrail-install.j2
-        dest: ~/json/contrail-install.json
+        src: /root/Contrail_Automation/templates/contrail-install.j2
+        dest: /root/json/contrail-install.json
 
     - name: Install a server manager deb package
       apt:
-        deb: ~/packages/contrail-server-manager-installer_{{ info.contrail_package[0].contrail_version }}_{{ info.host_vm[0].ubuntu_version }}.deb
+        deb: /root/packages/contrail-server-manager-installer_{{ info.contrail_package[0].contrail_version }}_{{ info.host_vm[0].ubuntu_version }}.deb
 
     - stat: path=/var/log/contrail-server-manager/debug.log
       register: debug_file
@@ -79,4 +79,3 @@
       until: results.stdout.find("Process Done") != -1
       retries: 120
       delay: 20
-
