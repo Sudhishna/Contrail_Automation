@@ -45,29 +45,46 @@ hostname=`grep "hostname" $DATA_PATH | awk -F' ' '{print $2}'`
 mac=`grep "mac" $DATA_PATH | awk -F' ' '{print $2}'`
 gw=`grep "gw" $DATA_PATH | awk -F' ' '{print $2}'`
 
-echo ""
-echo ""
-echo " ********************************************"
-echo "           TARGET MACHINE DETAILS"
-echo " ********************************************"
-echo ""
-echo " * HOSTNAME          : $hostname"
-echo ""
-echo " * MGMT IFACE        : $miface"
-echo ""
-echo " * IP ADDRESS        : $ip"
-echo ""
-echo " * GATEWAY           : $gw"
-echo ""
-echo " * MAC ADDRESS       : $mac"
-echo ""
-echo ""
-echo " ********************************************"
-read -p ' Confirm above details (Y?N) ? ' choice
 while true; do
+  echo ""
+  echo ""
+  echo " ********************************************"
+  echo "           TARGET MACHINE DETAILS"
+  echo " ********************************************"
+  echo ""
+  echo " * HOSTNAME          : $hostname"
+  echo ""
+  echo " * MGMT IFACE        : $miface"
+  echo ""
+  echo " * IP ADDRESS        : $ip"
+  echo ""
+  echo " * GATEWAY           : $gw"
+  echo ""
+  echo " * MAC ADDRESS       : $mac"
+  echo ""
+  echo ""
+  echo " ********************************************"
+  read -p ' Confirm above details (Y?N) ? ' choice
   case $choice in
         [Yy]* ) break;;
-        [Nn]* ) exit;;
+        [Nn]* ) 
+          echo ""
+          echo ""
+          echo "Enter new values, or press enter to accept default values"
+          echo "********************************************************"
+          echo ""
+          read -p " Enter IP ($ip): " temp
+          ip=${temp:-$ip}
+          read -p " Enter Hostname ($hostname): " temp
+          hostname=${temp:-$hostname}
+          read -p " Enter Default Gateway ($gw): " temp
+          gw=${temp:-$gw}
+          read -p " Enter Mac Address ($mac): " temp
+          mac=${temp:-$mac}
+          read -p " Enter the management interface ($miface): " temp
+          miface=${temp:-$miface}
+          clear
+          break;;
         * ) echo "Please answer y or n";;
     esac
 done
