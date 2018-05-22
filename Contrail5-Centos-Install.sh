@@ -104,7 +104,7 @@ while true; do
           echo ""
           echo ""
           echo "********************************************************"
-          read -p " Enter Hostname ($hostname): " tempversion
+          read -p " Enter version number ($contrail_version): " tempversion
           contrail_version=${tempversion:-$contrail_version}
           echo "********************************************************"
           echo ""
