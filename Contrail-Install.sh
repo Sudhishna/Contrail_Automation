@@ -13,14 +13,14 @@ echo " **************************************************"
 echo "      CONTRAIL HA-WEBSERVER DEPLOYMENT PROCESS"
 echo " **************************************************"
 echo ""
-read -p "Enter Contrail Host IP Address ($ip): " tempip
+read -p "Enter Contrail Host IP Address (x.x.x.x): " tempip
 ip=${tempip:-$ip}
-read -s -p "Enter Contrail Host Password ($password): " temppassword
+read -s -p "Enter Contrail Host Password: " temppassword
 password=${temppassword:-$password}
 echo ""
-read -p "Enter Management Interface Name ($miface): " tempiface
+read -p "Enter Management Interface Name: " tempiface
 miface=${tempiface:-$miface}
-read -p "Enter File Server Ip ($file_server): " tfs
+read -p "Enter File Server Ip: " tfs
 file_server=${tfs:-$file_server}
 
 # Write the ip addresses into the inventory file used by Ansible
