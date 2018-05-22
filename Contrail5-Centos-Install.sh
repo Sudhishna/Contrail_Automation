@@ -96,17 +96,18 @@ while true; do
   echo " ********************************************" 
   echo ""
   echo " * VERSION          : $contrail_version"
+  echo ""
   read -p ' Confirm above details (Y?N) ? ' choice
   case $choice in
         [Yy]* ) break;;
         [Nn]* )
           echo ""
-          echo ""
           echo "********************************************************"
+          echo ""
           read -p " Enter version number ($contrail_version): " tempversion
           contrail_version=${tempversion:-$contrail_version}
-          echo "********************************************************"
           echo ""
+          echo "********************************************************"
           echo ""
           ;;
         * ) echo "Please answer y or n";;
