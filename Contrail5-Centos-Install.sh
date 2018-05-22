@@ -83,8 +83,7 @@ while true; do
           mac=${temp:-$mac}
           read -p " Enter the management interface ($miface): " temp
           miface=${temp:-$miface}
-          clear
-          break;;
+          ;;
         * ) echo "Please answer y or n";;
     esac
 done
@@ -109,7 +108,7 @@ while true; do
           echo "********************************************************"
           echo ""
           echo ""
-          break;;
+          ;;
         * ) echo "Please answer y or n";;
    esac
  done
