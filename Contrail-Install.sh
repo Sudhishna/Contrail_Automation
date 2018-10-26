@@ -7,7 +7,7 @@
 HOME_DIR=/root/
 DATA_PATH=$HOME_DIR/Contrail_Automation/contrail-host-data.txt
 echo "" > $DATA_PATH
-
+echo ""
 echo ""
 echo " **************************************************"
 echo "      CONTRAIL HA-WEBSERVER DEPLOYMENT PROCESS"
